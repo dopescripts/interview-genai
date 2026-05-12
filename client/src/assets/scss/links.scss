@@ -1,0 +1,17 @@
+@use"./variables.scss" as *;
+a {
+  color: $primary-color;
+  text-decoration: none;
+  transition: 0.3s ease-in-out all;
+  font-size: 1rem;
+  &.primary-link {
+    &:hover {
+      color: $primary-hover;
+    }
+  }
+  &.link-underline {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@use"./variables.scss" as *;
+.btn {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  padding-inline: 1.5rem;
+  padding-block: 0.75rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  transition: 0.3s ease-in-out all;
+  font-size: 1rem;
+  &.primary-btn {
+    background-color: $primary-color;
+    color: white;
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.btn-lg {
+    padding-block: 1rem;
+    font-size: 1.125rem;
+  }
+}
