@@ -10,26 +10,31 @@ main {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
     .input-group {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       margin-bottom: 0.75rem;
+
       label {
         font-size: 0.9rem;
         font-weight: 500;
       }
+
       input {
         border: none;
         outline: none;
         padding: 0.75rem 0.75rem;
         border-radius: 0.5rem;
         transition: all 0.2s ease-in-out;
+
         &::placeholder {
           font-weight: 500;
         }
+
         &:focus {
-          box-shadow: 0 2px 0 2px #f20089e4;
+          box-shadow: 0 2px 0 2px #7506be;
         }
       }
     }

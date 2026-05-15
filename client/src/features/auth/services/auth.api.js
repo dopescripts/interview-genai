@@ -5,7 +5,7 @@ const api = axios.create({
     withCredentials: true,
 })
 
-export async function register({username, email, password}) {
+export async function register({ username, email, password }) {
 
     try {
         const res = await api.post('/api/auth/register', {
@@ -14,15 +14,13 @@ export async function register({username, email, password}) {
 
         return res.data;
 
-    } catch(err) {
-        
-        console.log(err);
-
+    } catch (err) {
+        throw err;
     }
 
-} 
+}
 
-export async function login({email, password}) {
+export async function login({ email, password }) {
 
     try {
 
@@ -33,10 +31,8 @@ export async function login({email, password}) {
         return res.data;
 
 
-    } catch(err) {
-
-        console.log(err);
-
+    } catch (err) {
+        throw err;
     }
 
 }
@@ -49,7 +45,7 @@ export async function logout() {
 
         return res;
 
-    } catch(err) {
+    } catch (err) {
 
         console.log(err);
 
@@ -58,7 +54,7 @@ export async function logout() {
 }
 
 export async function getMe() {
-    
+
     try {
 
         const res = await api.get('/api/auth/me');

@@ -3,10 +3,11 @@ import "../auth.form.scss";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import PixelTransition from "../components/PixelTransition";
+import Guest from "../components/Guest";
 
 function Login() {
 
-  const {handleLogin, loading} = useAuth();
+  const { handleLogin, loading } = useAuth();
 
   const navigate = useNavigate();
 
@@ -15,8 +16,10 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleLogin({email, password});
-    navigate('/');
+    const isSuccess = await handleLogin({ email, password });
+    if (isSuccess) {
+      navigate('/');
+    }
   };
 
   const loginFormContent = (
@@ -69,31 +72,33 @@ function Login() {
   );
 
   return (
-    <main style={{ position: 'relative' }}>
-      <style>{`
+    <Guest>
+      <main style={{ position: 'relative' }}>
+        <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
       `}</style>
-      <PixelTransition
-        firstContent={loginFormContent}
-        secondContent={loadingContent}
-        gridSize={12}
-        pixelColor='#f20089e4'
-        animationStepDuration={0.4}
-        trigger={loading}
-        disableHover={true}
-        style={{
-          width: '350px',
-          height: 'auto',
-          aspectRatio: 'auto',
-          padding: '2rem',
-          border: '0px solid #f20089e4',
-          backgroundColor: 'transparent'
-        }}
-        className="login-pixel-transition"
-      />
-    </main>
+        <PixelTransition
+          firstContent={loginFormContent}
+          secondContent={loadingContent}
+          gridSize={12}
+          pixelColor='#f20089e4'
+          animationStepDuration={0.4}
+          trigger={loading}
+          disableHover={true}
+          aspectRatio="120%"
+          style={{
+            width: '350px',
+            height: 'auto',
+            padding: '2rem',
+            border: '0px solid #f20089e4',
+            backgroundColor: 'transparent'
+          }}
+          className="login-pixel-transition"
+        />
+      </main>
+    </Guest>
   );
 }
 
