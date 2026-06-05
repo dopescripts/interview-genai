@@ -1,4 +1,4 @@
-const { GoogleGenAI, Type } = require('@google/genai');
+const { GoogleGenAI, Type, ApiError } = require('@google/genai');
 const { z } = require('zod');
 
 const ai = new GoogleGenAI({
@@ -134,17 +134,23 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     };
 
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.5-flash",
         contents: systemPrompt,
         config: {
             responseSchema: responseSchema,
             responseMimeType: "application/json",
             temperature: 1.0,
         },
+    }).catch((ApiError) => {
+        throw JSON.parse(ApiError.message);
     });
 
+    if (!response || !response.text) {
+        throw new Error("Failed to generate interview report");
+    }
+
     const reportData = interviewReportSchema.parse(JSON.parse(response.text));
-    console.log(reportData);
+    return reportData;
 }
 
 module.exports = { invokeGeminiAi, generateInterviewReport };

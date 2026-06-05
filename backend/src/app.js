@@ -14,7 +14,9 @@ app.use(cookieParser());
 
 /* registering application routes */
 const authRoutes = require("./routes/auth.routes");
+const interviewRoutes = require("./routes/interview.routes");
 
 app.use("/api/auth", authRoutes);
+app.use("/api/interview", interviewRoutes);
 
 module.exports = app;
