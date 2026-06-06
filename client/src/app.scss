@@ -2,12 +2,15 @@
 @use"./assets/scss/utils.scss";
 @use"./assets/scss/button.scss";
 @use"./assets/scss/links.scss";
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-#root, body {
+
+#root,
+body {
     width: 100%;
     background-color: #1c1c1c;
     color: whitesmoke;
