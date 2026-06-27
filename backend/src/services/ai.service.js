@@ -1,4 +1,4 @@
-const { GoogleGenAI, Type, ApiError } = require('@google/genai');
+const { GoogleGenAI, Type } = require('@google/genai');
 const { z } = require('zod');
 
 const ai = new GoogleGenAI({
@@ -66,78 +66,12 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     Job Description: ${jobDescription}
     `;
 
-    const responseSchema = {
-        type: Type.OBJECT,
-        properties: {
-            matchScore: { type: Type.NUMBER, description: "The match score between the resume and the job description, ranging from 0 to 100" },
-            technicalQuestions: {
-                type: Type.ARRAY,
-                description: "Technical questions that can be asked in the interview along with intention and answers",
-                items: {
-                    type: Type.OBJECT,
-                    properties: {
-                        question: { type: Type.STRING, description: "The technical question that can be asked in the interview" },
-                        intention: { type: Type.STRING, description: "The intention of the question, why this question can be asked in the interview" },
-                        answer: { type: Type.STRING, description: "How to answer this question, what points to cover etc.." }
-                    },
-                    required: ["question", "intention", "answer"]
-                }
-            },
-            behavioralQuestions: {
-                type: Type.ARRAY,
-                description: "Behavioral questions that can be asked in the interview along with intention and answers",
-                items: {
-                    type: Type.OBJECT,
-                    properties: {
-                        question: { type: Type.STRING, description: "The behavioral question that can be asked in the interview" },
-                        intention: { type: Type.STRING, description: "The intention of the question, why this question can be asked in the interview" },
-                        answer: { type: Type.STRING, description: "How to answer this question, what points to cover etc.." }
-                    },
-                    required: ["question", "intention", "answer"]
-                }
-            },
-            skillGaps: {
-                type: Type.ARRAY,
-                description: "Skill gaps that are present in the candidate",
-                items: {
-                    type: Type.OBJECT,
-                    properties: {
-                        skill: { type: Type.STRING, description: "The skill gap, the skill that is candidate lacking" },
-                        severity: {
-                            type: Type.STRING,
-                            description: "The severity of the skill gap",
-                            enum: ["high", "medium", "low"]
-                        }
-                    },
-                    required: ["skill", "severity"]
-                }
-            },
-            preparationPlan: {
-                type: Type.ARRAY,
-                description: "Day-wise preparation plan for the candidate to prepare for the interview effectively",
-                items: {
-                    type: Type.OBJECT,
-                    properties: {
-                        day: { type: Type.NUMBER, description: "The day number, starting from 1" },
-                        focus: { type: Type.STRING, description: "The main focus area for this day." },
-                        tasks: {
-                            type: Type.ARRAY,
-                            description: "The specific tasks to be completed on the day",
-                            items: { type: Type.STRING }
-                        }
-                    },
-                    required: ["day", "focus", "tasks"]
-                }
-            }
-        },
-        required: ["matchScore", "technicalQuestions", "behavioralQuestions", "skillGaps", "preparationPlan"]
-    };
 
     const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
         contents: systemPrompt,
         config: {
-            responseSchema: responseSchema,
+            responseSchema: z.toJSONSchema(interviewReportSchema),
             responseMimeType: "application/json",
             temperature: 1.0,
         },

@@ -1,6 +1,7 @@
 const { PDFParse } = require("pdf-parse");
 const { generateInterviewReport } = require("../services/ai.service");
 const interviewReportModel = require("../models/interviewReport.model");
+const { default: mongoose } = require("mongoose");
 
 /**
  * @name generateInterviewReportController
@@ -47,6 +48,71 @@ async function generateInterviewReportController(req, res) {
     }
 }
 
+/**
+ * @name getSingleInterviewReport
+ * @description Controller to get interview report by interviewId
+ */
+async function getSingleInterviewReport(req, res) {
+    const { interviewId } = req.params;
+
+    
+    if (!interviewId) {
+        return res.status(400).json({
+            message: "Please provide interviewId"
+        });
+    }
+
+    try {
+
+        const id = new mongoose.Types.ObjectId(interviewId);
+    
+        const interviewReport = await interviewReportModel.findById(id);
+    
+        if (!interviewReport) {
+            res.status(404).json({
+                message: "Invalid ID"
+            });
+        }
+    
+        if (req.user.id != interviewReport.user) {
+            res.status(403).json({
+                message: "You are not authorized to access this report"
+            });
+        }
+        
+        res.status(200).json({
+            message: "Interview Report retrieved successfully",
+            data: interviewReport
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: err.message || 'Something went wrong'
+        })
+    }
+
+}
+
+/**
+ * @name getAllInterviewReports
+ * @description Controller to get all interview reports of the logged in user
+ * @access private
+ */
+async function getAllInterviewReports(req, res) {
+    try {
+        const interviewReports = await interviewReportModel.find({ user: req.user.id });
+        res.status(200).json({
+            message: "Interview Reports retrieved successfully",
+            data: interviewReports
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: err.message || 'Something went wrong'
+        })
+    }
+}
+
 module.exports = {
-    generateInterviewReportController
+    generateInterviewReportController,
+    getSingleInterviewReport,
+    getAllInterviewReports
 }
